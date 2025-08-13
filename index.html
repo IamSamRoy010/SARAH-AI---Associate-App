@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Employee Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.min.js"></script>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="page active">
+        <div class="login-container">
+            <div class="login-card card">
+                <div class="card__body">
+                    <div class="login-header">
+                        <h2>Ultimate Employee Portal</h2>
+                        <p>Welcome back! Please sign in to your account.</p>
+                    </div>
+                    <form id="login-form" class="login-form">
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full-width">Sign In</button>
+                        <div id="login-error" class="error-message hidden"></div>
+                    </form>
+                    <div class="demo-credentials">
+                        <h5>Demo Credentials:</h5>
+                        <div class="demo-section">
+                            <strong>Store Associate:</strong>
+                            <p>Email: sarah.johnson@company.com | Password: store123</p>
+                            <p>Email: mike.chen@company.com | Password: store123</p>
+                        </div>
+                        <div class="demo-section">
+                            <strong>Manager/Corporate:</strong>
+                            <p>Email: emily.taylor@company.com | Password: manager123</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Store Associate Dashboard -->
+    <div id="store-dashboard" class="page hidden">
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <h2 id="personal-greeting">Hey!</h2>
+                    <p id="dashboard-subtitle">Your Things at a Glance</p>
+                </div>
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="overview">Overview</button>
+                    <button class="nav-tab" data-tab="store-map">3D Store Map</button>
+                    <button class="nav-tab" data-tab="inventory">Inventory</button>
+                    <button class="nav-tab" data-tab="training">Training Hub</button>
+                    <button class="nav-tab" data-tab="analytics">Analytics</button>
+                </div>
+                <div class="nav-actions">
+                    <div class="notification-wrapper">
+                        <button id="notification-btn" class="notification-btn">
+                            <span class="notification-icon">🔔</span>
+                            <span id="notification-badge" class="notification-badge hidden">0</span>
+                        </button>
+                        <div id="notification-dropdown" class="notification-dropdown hidden">
+                            <div class="notification-header">
+                                <h4>Notifications & News</h4>
+                                <button id="mark-all-read" class="btn btn--sm btn--outline">Mark All Read</button>
+                            </div>
+                            <div id="notification-groups" class="notification-groups"></div>
+                        </div>
+                    </div>
+                    <div class="profile-wrapper">
+                        <button id="profile-btn" class="profile-btn">
+                            <img id="profile-img" src="" alt="" class="profile-img">
+                        </button>
+                        <div id="profile-dropdown" class="profile-dropdown hidden">
+                            <div class="profile-info">
+                                <span id="profile-name"></span>
+                                <span id="profile-role"></span>
+                            </div>
+                            <button id="store-logout" class="btn btn--outline btn--sm btn--full-width">Logout</button>
+                        </div>
+                    </div>
+                    <button id="toggle-chat" class="btn btn--secondary btn--sm">💬 Chat</button>
+                    <button id="quick-actions-toggle" class="btn btn--primary btn--sm">⚡ Quick Actions</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-layout">
+            <!-- Overview Tab -->
+            <div id="overview-tab" class="tab-content active">
+                <div class="dashboard-container">
+                    <div class="dashboard-grid">
+                        <!-- Quick Read Metrics Cards -->
+                        <div class="dashboard-section full-width">
+                            <div class="quick-metrics-grid">
+                                <div class="quick-metric-card">
+                                    <div class="metric-icon">💰</div>
+                                    <div class="metric-info">
+                                        <div class="metric-value" id="today-sales">$15,420</div>
+                                        <div class="metric-label">Today's Sales</div>
+                                        <div class="metric-target">Target: $18,000</div>
+                                    </div>
+                                </div>
+                                <div class="quick-metric-card">
+                                    <div class="metric-icon">👥</div>
+                                    <div class="metric-info">
+                                        <div class="metric-value" id="customer-count">127</div>
+                                        <div class="metric-label">Customer Count</div>
+                                        <div class="metric-trend">+12% vs yesterday</div>
+                                    </div>
+                                </div>
+                                <div class="quick-metric-card">
+                                    <div class="metric-icon">🏆</div>
+                                    <div class="metric-info">
+                                        <div class="metric-value" id="top-item">iPhone 15</div>
+                                        <div class="metric-label">Top Selling Item</div>
+                                        <div class="metric-trend">8 units sold</div>
+                                    </div>
+                                </div>
+                                <div class="quick-metric-card">
+                                    <div class="metric-icon">⭐</div>
+                                    <div class="metric-info">
+                                        <div class="metric-value" id="compliance-score">88%</div>
+                                        <div class="metric-label">Compliance Score</div>
+                                        <div class="metric-trend">+3% this week</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Today's Tasks Enhanced -->
+                        <div class="dashboard-section">
+                            <div class="card">
+                                <div class="card__header">
+                                    <h4>Today's Tasks</h4>
+                                    <div class="task-header-actions">
+                                        <button id="task-settings-btn" class="btn btn--secondary btn--sm" title="Task Settings">⚙️</button>
+                                        <button id="add-task-btn" class="btn btn--primary btn--sm">+ New Task</button>
+                                        <span id="store-shift-time" class="status status--info"></span>
+                                    </div>
+                                </div>
+                                <div class="card__body">
+                                    <div id="tasks-list" class="tasks-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Staff on Duty -->
+                        <div class="dashboard-section">
+                            <div class="card">
+                                <div class="card__header">
+                                    <h4>Staff on Duty</h4>
+                                </div>
+                                <div class="card__body">
+                                    <div id="staff-on-duty" class="staff-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D Store Map Tab -->
+            <div id="store-map-tab" class="tab-content hidden">
+                <div class="dashboard-container">
+                    <div class="store-map-section">
+                        <div class="card">
+                            <div class="card__header">
+                                <h4>3D Store Layout & Planogram Manager</h4>
+                                <div class="map-controls">
+                                    <button id="planogram-check-btn" class="btn btn--primary btn--sm">📷 Planogram Check</button>
+                                    <button id="planogram-create-btn" class="btn btn--secondary btn--sm">🎨 Create Planogram</button>
+                                    <button id="layout-creator-btn" class="btn btn--secondary btn--sm">🏗️ Layout Creator</button>
+                                    <button id="generate-report-btn" class="btn btn--secondary btn--sm">📋 Generate Report</button>
+                                </div>
+                            </div>
+                            <div class="card__body">
+                                <div class="store-map-container">
+                                    <div id="store-3d-map" class="store-3d-map">
+                                        <!-- 3D Scene will be rendered here -->
+                                    </div>
+                                    <div class="map-legend">
+                                        <div class="legend-item">
+                                            <div class="legend-color good"></div>
+                                            <span>Good (≥90%)</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color warning"></div>
+                                            <span>Warning (80-89%)</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color poor"></div>
+                                            <span>Poor (<80%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Inventory Tab -->
+            <div id="inventory-tab" class="tab-content hidden">
+                <div class="dashboard-container">
+                    <div class="inventory-section">
+                        <!-- Inventory Dashboard -->
+                        <div class="card">
+                            <div class="card__header">
+                                <h4>Inventory Dashboard</h4>
+                                <div class="inventory-controls">
+                                    <button id="add-inventory-btn" class="btn btn--primary btn--sm">+ Add Item</button>
+                                    <button id="cycle-count-btn" class="btn btn--secondary btn--sm">📊 Cycle Count</button>
+                                    <button id="low-stock-alert-btn" class="btn btn--secondary btn--sm">⚠️ Low Stock</button>
+                                </div>
+                            </div>
+                            <div class="card__body">
+                                <div class="inventory-grid">
+                                    <div class="inventory-search">
+                                        <input type="text" id="inventory-search" class="form-control" placeholder="Search inventory...">
+                                        <select id="department-filter-inventory" class="form-control">
+                                            <option value="">All Departments</option>
+                                            <option value="Electronics">Electronics</option>
+                                            <option value="Clothing">Clothing</option>
+                                            <option value="Grocery">Grocery</option>
+                                            <option value="Home & Garden">Home & Garden</option>
+                                        </select>
+                                    </div>
+                                    <div id="inventory-list" class="inventory-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Restock Orders -->
+                        <div class="card">
+                            <div class="card__header">
+                                <h4>Restock Orders</h4>
+                                <button id="create-order-btn" class="btn btn--primary btn--sm">+ Create Order</button>
+                            </div>
+                            <div class="card__body">
+                                <div id="restock-orders" class="restock-orders"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Hub Tab -->
+            <div id="training-tab" class="tab-content hidden">
+                <div class="dashboard-container">
+                    <div class="training-section">
+                        <div class="card">
+                            <div class="card__header">
+                                <h4>Training Hub</h4>
+                                <div class="training-stats">
+                                    <span class="status status--success">4 Completed</span>
+                                    <span class="status status--warning">2 In Progress</span>
+                                    <span class="status status--info">3 Available</span>
+                                </div>
+                            </div>
+                            <div class="card__body">
+                                <div id="training-modules" class="training-modules"></div>
+                            </div>
+                        </div>
+
+                        <!-- Current Training -->
+                        <div id="current-training" class="card training-player hidden">
+                            <div class="card__header">
+                                <h4 id="current-training-title">Training Module</h4>
+                                <button id="close-training" class="btn btn--sm btn--outline">✕ Close</button>
+                            </div>
+                            <div class="card__body">
+                                <div id="training-content" class="training-content">
+                                    <div class="training-video-placeholder">
+                                        <div class="video-icon">📹</div>
+                                        <p>Training video content would play here</p>
+                                    </div>
+                                </div>
+                                <div class="training-progress">
+                                    <div class="progress-bar">
+                                        <div id="training-progress-fill" class="progress-fill"></div>
+                                    </div>
+                                    <span id="training-progress-text">0% Complete</span>
+                                </div>
+                                <div class="training-actions">
+                                    <button id="prev-section" class="btn btn--secondary btn--sm">← Previous</button>
+                                    <button id="next-section" class="btn btn--primary btn--sm">Next →</button>
+                                    <button id="complete-training" class="btn btn--success btn--sm hidden">Complete & Get Certificate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Analytics Tab -->
+            <div id="analytics-tab" class="tab-content hidden">
+                <div class="dashboard-container">
+                    <div class="analytics-section">
+                        <!-- Performance Charts -->
+                        <div class="analytics-grid">
+                            <div class="card">
+                                <div class="card__header">
+                                    <h4>Sales Performance</h4>
+                                </div>
+                                <div class="card__body">
+                                    <div class="chart-container" style="position: relative; height: 300px;">
+                                        <canvas id="salesTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card__header">
+                                    <h4>Conversion Rate</h4>
+                                </div>
+                                <div class="card__body">
+                                    <div class="chart-container" style="position: relative; height: 300px;">
+                                        <canvas id="conversionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card__header">
+                                    <h4>Department Revenue</h4>
+                                </div>
+                                <div class="card__body">
+                                    <div class="chart-container" style="position: relative; height: 300px;">
+                                        <canvas id="departmentRevenueChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card__header">
+                                    <h4>Customer Traffic</h4>
+                                </div>
+                                <div class="card__body">
+                                    <div class="chart-container" style="position: relative; height: 300px;">
+                                        <canvas id="trafficChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card__header">
+                                    <h4>Department Performance</h4>
+                                </div>
+                                <div class="card__body">
+                                    <div class="chart-container" style="position: relative; height: 300px;">
+                                        <canvas id="departmentChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card__header">
+                                    <h4>Employee Productivity</h4>
+                                </div>
+                                <div class="card__body">
+                                    <div class="chart-container" style="position: relative; height: 300px;">
+                                        <canvas id="productivityChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Corporate Dashboard (Simplified) -->
+    <div id="corporate-dashboard" class="page hidden">
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <h2 id="corporate-personal-greeting">Hey!</h2>
+                    <p id="corporate-dashboard-subtitle">Your Things at a Glance</p>
+                </div>
+                <div class="nav-actions">
+                    <div class="profile-wrapper">
+                        <button id="corporate-profile-btn" class="profile-btn">
+                            <img id="corporate-profile-img" src="" alt="" class="profile-img">
+                        </button>
+                        <div id="corporate-profile-dropdown" class="profile-dropdown hidden">
+                            <div class="profile-info">
+                                <span id="corporate-profile-name"></span>
+                                <span id="corporate-profile-role"></span>
+                            </div>
+                            <button id="corporate-logout" class="btn btn--outline btn--sm btn--full-width">Logout</button>
+                        </div>
+                    </div>
+                    <button id="toggle-chat-corp" class="btn btn--secondary btn--sm">💬 Chat</button>
+                </div>
+            </div>
+        </nav>
+        <div class="main-layout">
+            <div class="dashboard-container">
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Corporate Dashboard</h3>
+                        <p>Welcome to the corporate management interface.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Root for ChatUI System -->
+    <div id="chat-root"></div>
+
+    <!-- Quick Actions Drawer -->
+    <div id="quick-actions-drawer" class="quick-actions-drawer hidden">
+        <div class="drawer-header">
+            <h3>Quick Actions</h3>
+            <button id="close-drawer" class="drawer-close">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <button id="qa-clock-in-out" class="drawer-action-btn">
+                <span class="action-icon">🕐</span>
+                <span class="action-text">Clock In/Out</span>
+            </button>
+            <button id="qa-report-issue" class="drawer-action-btn">
+                <span class="action-icon">⚠️</span>
+                <span class="action-text">Report Issue</span>
+            </button>
+            <button id="qa-request-assistance" class="drawer-action-btn">
+                <span class="action-icon">🤝</span>
+                <span class="action-text">Request Assistance</span>
+            </button>
+            <button id="qa-price-check" class="drawer-action-btn">
+                <span class="action-icon">💰</span>
+                <span class="action-text">Price Check</span>
+            </button>
+            <button id="qa-absence-request" class="drawer-action-btn">
+                <span class="action-icon">🏖️</span>
+                <span class="action-text">Absence Request</span>
+            </button>
+            <button id="qa-training-hub" class="drawer-action-btn">
+                <span class="action-icon">📚</span>
+                <span class="action-text">Training Hub</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODALS SECTION -->
+
+    <!-- Task Settings Modal -->
+    <div id="task-settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Task Configuration Settings</h3>
+                <button id="close-task-settings-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>Notification Preferences</h4>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify-task-assigned" checked>
+                            Notify when tasks are assigned to me
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify-task-due" checked>
+                            Remind me 1 hour before tasks are due
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="sound-notifications" checked>
+                            Enable sound notifications
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4>Display Options</h4>
+                    <div class="form-group">
+                        <label for="default-sort" class="form-label">Default Sort</label>
+                        <select id="default-sort" class="form-control">
+                            <option value="priority">By Priority</option>
+                            <option value="date">By Due Date</option>
+                            <option value="status">By Status</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-completed" checked>
+                            Show completed tasks
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="auto-delegate" checked>
+                            Auto-delegate by department
+                        </label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button id="save-task-settings" class="btn btn--primary">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Editor Modal -->
+    <div id="task-editor-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="task-modal-title">Add New Task</h3>
+                <button id="close-task-editor-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="task-form">
+                    <div class="form-group">
+                        <label for="task-title" class="form-label">Task Title</label>
+                        <input type="text" id="task-title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-description" class="form-label">Description</label>
+                        <textarea id="task-description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-priority" class="form-label">Priority</label>
+                        <select id="task-priority" class="form-control">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-due-date" class="form-label">Due Date</label>
+                        <input type="date" id="task-due-date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-assignee" class="form-label">Assignee</label>
+                        <select id="task-assignee" class="form-control"></select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="cancel-task-editor" class="btn btn--outline">Cancel</button>
+                        <button type="submit" class="btn btn--primary">Save Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Status Modal -->
+    <div id="task-status-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Change Task Status</h3>
+                <button id="close-task-status-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="status-options">
+                    <button class="status-option-btn" data-status="open">
+                        <span class="status-dot status-open"></span>
+                        <span>Open</span>
+                    </button>
+                    <button class="status-option-btn" data-status="ongoing">
+                        <span class="status-dot status-ongoing"></span>
+                        <span>Ongoing</span>
+                    </button>
+                    <button class="status-option-btn" data-status="completed">
+                        <span class="status-dot status-completed"></span>
+                        <span>Completed</span>
+                    </button>
+                    <button class="status-option-btn" data-status="delayed">
+                        <span class="status-dot status-delayed"></span>
+                        <span>Delayed</span>
+                    </button>
+                    <button class="status-option-btn" data-status="de-prioritised">
+                        <span class="status-dot status-de-prioritised"></span>
+                        <span>De-prioritised</span>
+                    </button>
+                    <button class="status-option-btn" data-status="delegated">
+                        <span class="status-dot status-delegated"></span>
+                        <span>Delegated</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clock In/Out Modal -->
+    <div id="clock-in-out-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Clock In / Clock Out</h3>
+                <button id="close-clock-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="current-time-display">
+                    <h4>Current Time: <span id="current-time"></span></h4>
+                </div>
+                <div class="clock-actions">
+                    <button id="clock-in-btn" class="btn btn--success btn--lg">Clock IN</button>
+                    <button id="clock-out-btn" class="btn btn--warning btn--lg">Clock OUT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Issue Modal -->
+    <div id="report-issue-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Report Issue</h3>
+                <button id="close-report-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="report-form">
+                    <div class="form-group">
+                        <label for="issue-category" class="form-label">Category</label>
+                        <select id="issue-category" class="form-control" required>
+                            <option value="">Select Category</option>
+                            <option value="safety">Safety Concern</option>
+                            <option value="customer">Customer Issue</option>
+                            <option value="maintenance">Maintenance Request</option>
+                            <option value="inventory">Inventory Problem</option>
+                            <option value="equipment">Equipment Malfunction</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-description" class="form-label">Description</label>
+                        <textarea id="issue-description" class="form-control" rows="4" placeholder="Please describe the issue in detail..." required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn--outline" onclick="closeModal('report-issue-modal')">Cancel</button>
+                        <button type="submit" class="btn btn--primary">Submit Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Assistance Modal -->
+    <div id="request-assistance-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Request Assistance</h3>
+                <button id="close-assistance-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="assistance-form">
+                    <div class="form-group">
+                        <label for="assistance-urgency" class="form-label">Urgency Level</label>
+                        <select id="assistance-urgency" class="form-control" required>
+                            <option value="low">Low - When convenient</option>
+                            <option value="medium" selected>Medium - Within 30 minutes</option>
+                            <option value="high">High - Within 10 minutes</option>
+                            <option value="urgent">Urgent - Immediate attention</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="assistance-reason" class="form-label">Reason for Assistance</label>
+                        <textarea id="assistance-reason" class="form-control" rows="3" placeholder="What do you need help with?" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn--outline" onclick="closeModal('request-assistance-modal')">Cancel</button>
+                        <button type="submit" class="btn btn--primary">Send Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price Check Modal -->
+    <div id="price-check-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Price Check</h3>
+                <button id="close-price-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="price-form">
+                    <div class="form-group">
+                        <label for="price-sku" class="form-label">Product SKU/Barcode</label>
+                        <input type="text" id="price-sku" class="form-control" placeholder="Enter or scan SKU" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn--outline" onclick="closeModal('price-check-modal')">Cancel</button>
+                        <button type="submit" class="btn btn--primary">Check Price</button>
+                    </div>
+                </form>
+                <div id="price-result" class="price-result hidden">
+                    <div class="result-item">
+                        <label>Product Name:</label>
+                        <span id="product-name">-</span>
+                    </div>
+                    <div class="result-item">
+                        <label>Current Price:</label>
+                        <span id="current-price">-</span>
+                    </div>
+                    <div class="result-item">
+                        <label>Stock Level:</label>
+                        <span id="stock-level">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absence Request Modal -->
+    <div id="absence-request-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Request Time Off</h3>
+                <button id="close-absence-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="absence-form">
+                    <div class="form-group">
+                        <label for="absence-type" class="form-label">Leave Type</label>
+                        <select id="absence-type" class="form-control">
+                            <option value="vacation">Vacation</option>
+                            <option value="sick">Sick Leave</option>
+                            <option value="personal">Personal Day</option>
+                            <option value="emergency">Emergency Leave</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="absence-start" class="form-label">Start Date</label>
+                        <input type="date" id="absence-start" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="absence-end" class="form-label">End Date</label>
+                        <input type="date" id="absence-end" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="absence-reason" class="form-label">Reason (Optional)</label>
+                        <textarea id="absence-reason" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn--outline" onclick="closeModal('absence-request-modal')">Cancel</button>
+                        <button type="submit" class="btn btn--primary">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional modals for inventory, planogram, etc. (keeping existing ones) -->
+    <div id="inventory-item-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="inventory-modal-title">Add Inventory Item</h3>
+                <button id="close-inventory-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="inventory-form">
+                    <div class="form-group">
+                        <label for="item-name" class="form-label">Item Name</label>
+                        <input type="text" id="item-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-category" class="form-label">Category</label>
+                        <select id="item-category" class="form-control">
+                            <option value="Electronics">Electronics</option>
+                            <option value="Clothing">Clothing</option>
+                            <option value="Grocery">Grocery</option>
+                            <option value="Home & Garden">Home & Garden</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-stock" class="form-label">Current Stock</label>
+                        <input type="number" id="item-stock" class="form-control" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-price" class="form-label">Price</label>
+                        <input type="number" id="item-price" class="form-control" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn--outline" onclick="closeModal('inventory-item-modal')">Cancel</button>
+                        <button type="submit" class="btn btn--primary">Save Item</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SARAH AI Assistant - Enhanced -->
+    <div id="sarah-button" class="sarah-button">
+        <div class="sarah-pulse"></div>
+        <div class="sarah-icon">🤖</div>
+        <span class="sarah-label">Ask SARAH</span>
+    </div>
+
+    <!-- SARAH AI Modal - Completely Enhanced -->
+    <div id="sarah-modal" class="modal sarah-modal hidden">
+        <div class="modal-content sarah-content">
+            <div class="modal-header sarah-header">
+                <div class="sarah-title-section">
+                    <h3>SARAH - AI Assistant</h3>
+                    <span class="sarah-status" id="sarah-status">Online</span>
+                </div>
+                <div class="sarah-controls">
+                    <button id="voice-toggle" class="btn btn--secondary btn--sm">🎤 Voice</button>
+                    <button id="close-sarah-modal" class="modal-close">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body sarah-body">
+                <div id="sarah-messages" class="sarah-messages">
+                    <div class="sarah-message bot-message">
+                        <div class="sarah-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-author">SARAH</span>
+                                <span class="message-time" id="initial-time"></span>
+                            </div>
+                            <div class="message-text">
+                                Hi! I'm SARAH, your ultimate AI assistant. I can help you with:
+                                <ul>
+                                    <li>📊 3D store mapping and planogram analysis</li>
+                                    <li>📦 Inventory management and stock alerts</li>
+                                    <li>📚 Training modules and certifications</li>
+                                    <li>💬 Real-time team communication</li>
+                                    <li>📋 Task management and scheduling</li>
+                                </ul>
+                                What would you like me to help you with today?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sarah-typing" class="sarah-typing hidden">
+                    <div class="sarah-avatar">🤖</div>
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="sarah-prompts">
+                    <div class="prompts-header">Quick Actions:</div>
+                    <div id="sarah-prompt-buttons" class="prompt-buttons">
+                        <button class="prompt-btn" data-prompt="Show my schedule">Show my schedule</button>
+                        <button class="prompt-btn" data-prompt="Reschedule shift">Reschedule shift</button>
+                        <button class="prompt-btn" data-prompt="Find a colleague">Find a colleague</button>
+                        <button class="prompt-btn" data-prompt="Report an issue">Report an issue</button>
+                        <button class="prompt-btn" data-prompt="Clock me out">Clock me out</button>
+                        <button class="prompt-btn" data-prompt="Create a task">Create a task</button>
+                    </div>
+                </div>
+                <div class="sarah-input-container">
+                    <input type="text" id="sarah-input" class="form-control" placeholder="Ask SARAH anything..." autocomplete="off">
+                    <button id="voice-input-btn" class="btn btn--secondary voice-btn">🎤</button>
+                    <button id="send-sarah" class="btn btn--primary">Send</button>
+                </div>
+                <div id="voice-status" class="voice-status hidden">
+                    <div class="voice-indicator">
+                        <div class="voice-wave"></div>
+                        <div class="voice-wave"></div>
+                        <div class="voice-wave"></div>
+                    </div>
+                    <span>Listening...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal for SARAH Actions -->
+    <div id="sarah-confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Action</h3>
+                <button id="close-sarah-confirm" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Are you sure you want to perform this action?</p>
+                <div class="form-actions">
+                    <button id="confirm-cancel" class="btn btn--outline">Cancel</button>
+                    <button id="confirm-execute" class="btn btn--primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
